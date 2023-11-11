@@ -9,9 +9,9 @@ const cookieParser = require("cookie-parser");
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      // "https://car-doctor-clients-16528.web.app",
-      // "https://car-doctor-clients-16528.firebaseapp.com",
+      // "http://localhost:5173",
+      "https://car-doctor-clients-16528.web.app",
+      "https://car-doctor-clients-16528.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -63,11 +63,12 @@ async function run() {
         expiresIn: "1h",
       });
       res
-        .cookie("Token", tokenDB, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
+      .cookie('token', tokenDB, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+
+    })
         .send({ success: true });
     });
 
