@@ -9,8 +9,9 @@ const cookieParser = require("cookie-parser");
 app.use(
   cors({
     origin: [
-      "https://car-doctor-clients-16528.web.app",
-      "https://car-doctor-clients-16528.firebaseapp.com",
+      "http://localhost:5173",
+      // "https://car-doctor-clients-16528.web.app",
+      // "https://car-doctor-clients-16528.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -76,7 +77,18 @@ async function run() {
     });
 
     app.get("/services", async (req, res) => {
-      const data = ServiceCollection.find();
+      const filter=req.query
+      console.log(filter)
+      const query={
+        // price:{$gt:100}
+        title: {$regex: filter.search,$options: 'i'}
+      }
+      const option={
+        sort:{
+          price:filter.sort=='asyc'?1:-1
+        }
+      }
+      const data = ServiceCollection.find(query,option);
       const dataCollection = await data.toArray();
       res.send(dataCollection);
     });
